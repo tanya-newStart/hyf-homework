@@ -1,0 +1,4 @@
+git rocks
+create a branch for each hm
+merge only after addressing mentor feedback
+don't create a repo inside another repo
