@@ -57,3 +57,23 @@ function smartWear (temp){
 }
 const clothesToWear = smartWear(-8);
 console.log(clothesToWear); // Logs out: "shorts and a t-shirt"
+
+//Student manager
+const class07Students = [];
+function addStudentToClass(studentName) {
+  while(class07Students.length<6){
+    class07Students.push(studentName);
+    break;
+    
+}
+}
+addStudentToClass("tanya");
+addStudentToClass("zlata");
+addStudentToClass("tanya");
+addStudentToClass("tanya");
+addStudentToClass("tanya");
+addStudentToClass("tanya");
+console.log(class07Students);
+//function getNumberOfStudents() {
+  // You write code here
+//}
