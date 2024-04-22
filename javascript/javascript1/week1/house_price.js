@@ -1,5 +1,5 @@
 function housePrice(width,depth,height, gardenSizeInM2){
-    let volumeInMeters = width*depth*height;
+    const volumeInMeters = width*depth*height;
     return volumeInMeters * 2.5 * 1000 + gardenSizeInM2 * 300;
 
 }

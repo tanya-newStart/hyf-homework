@@ -1,20 +1,20 @@
 // A future age calculator
-let yearOfBirth = 1981;
-let futureYear = 2045;
+const yearOfBirth = 1981;
+const futureYear = 2045;
 
-let age = futureYear - yearOfBirth;
+const age = futureYear - yearOfBirth;
 
 console.log(`You will be ${age} years old in ${futureYear}.`);
 
 
 // A dog age calculator
-let dogYearOfBirth = 2017;
-let dogYearFuture = 2027;
+const dogYearOfBirth = 2017;
+const dogYearFuture = 2027;
 
-let age_humanYears =dogYearFuture - dogYearOfBirth;
-let dogYear = age_humanYears*7;
+const age_humanYears =dogYearFuture - dogYearOfBirth;
+const dogYear = age_humanYears*7;
 
-let shouldShowResultInDogYears = false;
+const shouldShowResultInDogYears = false;
 
 if (shouldShowResultInDogYears){
     console.log(`Your dog will be ${dogYear} dog years old in ${dogYearFuture}`);

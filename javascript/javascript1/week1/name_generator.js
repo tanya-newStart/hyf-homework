@@ -24,7 +24,7 @@ const secondWords =[
 ];
 
 const randomNumber = Math.floor(Math.random() * 10);//random number between 0 and 9
-let firstOne = firstWords[randomNumber];
-let secondOne = secondWords[randomNumber];
-let nameLength =firstOne.length+secondOne.length;
+const firstOne = firstWords[randomNumber];
+const secondOne = secondWords[randomNumber];
+const nameLength =firstOne.length+secondOne.length;
 console.log(`The startup: "${firstOne} ${secondOne}" contains ${nameLength} characters.`);
