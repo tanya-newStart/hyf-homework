@@ -15,3 +15,15 @@ console.log(array[3]);
 console.log(typeof array[7]);
 // Optional with javascript console.log the last character in your name.
 console.log(myName[myName.length -1]);
+console.log("Tanya"<"Zlata");
+
+
+let goodName = "benjamin";
+goodName = "benjamin-better";
+
+const pizzaPrice = 78;
+const pizzaPriceDiscounted = pizzaPrice - 10;
+
+const users = ["peter", "Johnny", "Børge"];
+
+const lastUser = users[users.length-1];
