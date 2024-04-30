@@ -137,3 +137,52 @@ function markAsDone(id) {
   }
 }
 markAsDone(2);
+
+//phone usage
+const activities = [];
+const USER_LIMIT = 120;
+
+function addActivity(date, activity, duration) {
+  const userActivity = {};
+  userActivity["date"] = date;
+  userActivity["activity"] = activity;
+  userActivity["duration"] = duration;
+  activities.push(userActivity);
+  return activities;
+}
+
+console.log(addActivity("23/7-18", "Youtube", 100));
+addActivity("23/7-18", "Netflix", 40);
+
+function showStatus(activities) {
+  if (activities.length === 0) {
+    console.log("Add some activities before calling showStatus");
+    return;
+  }
+  const amountOfActivities = activities.length;
+  let totalTime = 0;
+  for (let activity of activities) {
+    totalTime += activity.duration;
+  }
+  if (activities.length === 1) {
+    console.log(
+      `You have added ${amountOfActivities} activity. It amounts to ${totalTime} min of usage.`
+    );
+  } else {
+    console.log(
+      `You have added ${amountOfActivities} activities. They amount to ${totalTime} min of usage.`
+    );
+  }
+  if (totalTime > USER_LIMIT)
+    console.log("You have reached your limit, no more smartphoning for you!");
+}
+showStatus(activities); // will log out this "You have added 3 activities. They amount to 78 min. of usage"
+
+/*
+activities should now look like this
+[{
+    date: '23/7-18',
+    activity: 'Youtube',
+    duration: 30,
+}]
+*/
