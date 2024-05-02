@@ -141,18 +141,40 @@ markAsDone(2);
 //phone usage
 const activities = [];
 const USER_LIMIT = 120;
+const WARNING_THRESHOLD = USER_LIMIT * 0.8;
+const categories = {
+  Social: ["Instagram", "Tik Tok", "Messenger"],
+  Intertainment: ["Netflix", "Games", "YouTube"],
+};
+let totalDuration = 0;
 
 function addActivity(date, activity, duration) {
-  const userActivity = {};
-  userActivity["date"] = date;
-  userActivity["activity"] = activity;
-  userActivity["duration"] = duration;
+  const type = getActivity(activity);
+  const userActivity = {
+    date,
+    activity,
+    duration,
+    type,
+  };
   activities.push(userActivity);
+  totalDuration += duration;
+  if (totalDuration >= WARNING_THRESHOLD) {
+    console.warn("Warning: You are approaching your usage limit.");
+  }
   return activities;
 }
-
+function getActivity() {}
 console.log(addActivity("23/7-18", "Youtube", 100));
 addActivity("23/7-18", "Netflix", 40);
+addActivity("23/04/2024", "Netflix", 15);
+
+const groups = categories.map((category) => {
+  return {
+    category,
+    items: activities.filter((activity) => activity.type === category),
+  };
+});
+console.log(groups);
 
 function showStatus(activities) {
   if (activities.length === 0) {
