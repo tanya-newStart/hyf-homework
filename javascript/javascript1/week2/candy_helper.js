@@ -6,47 +6,56 @@ const candies = {
 };
 
 const boughtCandyPrices = [];
-let amountToSpend = +(Math.random() * 100).toFixed(2); // + converts str back to the number
+const budget = Math.random() * 100;
+let amountToSpend = budget;
 
 function addCandy(candyType, weight) {
-  const price = +(candies[candyType] * weight).toFixed(2); // + converts str back to the number
-  let budget = amountToSpend - price;
-  if (budget > 0 && canBuyMoreCandy()) {
+  const price = candies[candyType] * weight;
+  if (amountToSpend > 0 && canBuyMoreCandy()) {
+    amountToSpend -= price;
     boughtCandyPrices.push(price);
-    amountToSpend = budget;
+    return true;
+  } else {
+    return false;
+  }
+}
+function orderStatus(success) {
+  if (success) {
     return `You can buy more, so please do! You have ${amountToSpend.toFixed(
       2
     )} to spend.`;
   } else {
-    return `You are buying candy that costs ${price}.You have only ${amountToSpend.toFixed(
+    return `You don't have enough money. You have only ${amountToSpend.toFixed(
       2
     )} left. Enough candy for you?!`;
   }
 }
-//USING FOR LOOP HERE:
-//function canBuyMoreCandy() {
-//  for (let i = 0; i < boughtCandyPrices.length; i++) {
-//    amountToSpend -= boughtCandyPrices[i];
-//  }
-// return amountToSpend > 0;
-//}
 
-// WHILE LOOP
+//USING FOR LOOP HERE:
 function canBuyMoreCandy() {
   let totalPrice = 0;
-  let index = 0;
-  while (index < boughtCandyPrices.length) {
-    totalPrice += boughtCandyPrices[index];
-    index++;
+  for (let i = 0; i < boughtCandyPrices.length; i++) {
+    totalPrice += boughtCandyPrices[i];
   }
   return totalPrice <= amountToSpend;
 }
 
+// WHILE LOOP
+// function canBuyMoreCandy() {
+//
+//   let index = 0;
+//   while (index < boughtCandyPrices.length) {
+//     totalPrice += boughtCandyPrices[index];
+//     index++;
+//   }
+//   return totalPrice <= amountToSpend;
+// }
+
 //testing code
-console.log(`You have ${amountToSpend}`);
-console.log(addCandy("Chewing-gum", 100));
-console.log(addCandy("Sweet", 10));
-console.log(addCandy("Toffee", 20));
-console.log(addCandy("Chocolate", 100));
+console.log(`You have ${amountToSpend.toFixed()}`);
+addCandy("Chewing-gum", 100);
+addCandy("Sweet", 50);
+const message = orderStatus(addCandy("Toffee", 20));
+console.log(message);
 console.log(boughtCandyPrices);
 console.log(canBuyMoreCandy());
