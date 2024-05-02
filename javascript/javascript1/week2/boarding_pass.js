@@ -6,14 +6,14 @@ function getFullname(
 ) {
   try {
     if (!firstname || !lastname)
-      throw "Error! Both first and last names are required.";
+      throw `Error! Both first and last names are required.`;
     if (useFormalName && isFemale) {
-      return "Baroness " + firstname + " " + lastname;
+      return `Baroness ${firstname} ${lastname}`;
     }
     if (useFormalName) {
-      return "Lord " + firstname + " " + lastname;
+      return `Lord ${firstname} ${lastname}`;
     } else {
-      return firstname + " " + lastname;
+      return `${firstname} ${lastname}`;
     }
   } catch (error) {
     return error;
