@@ -53,23 +53,30 @@ const seriesDurations = [
     minutes: 40,
   },
 ];
+
+const avgLifeSpan = 80; //in years
+const avgLifeSpanInMin = avgLifeSpan * 365 * 24 * 60; //in minutes
+
 function timeSpendOnSeries() {
-  const avgLifeSpan = 80; //in years
-  const avgLifeSpanInMin = avgLifeSpan * 365 * 24 * 60; //in minutes
   let totalSeriesTime = 0;
   seriesDurations.forEach((element) => {
-    const daysInMin = element.days * 24 * 69;
-    console.log(daysInMin);
+    const daysInMin = element.days * 24 * 60;
+    //console.log(daysInMin);
     const hoursInMin = element.hours * 60;
-    console.log(hoursInMin);
+    //console.log(hoursInMin);
     const minutes = element.minutes;
-    console.log(minutes);
+    //console.log(minutes);
     const totalTime = daysInMin + hoursInMin + minutes;
-    totalSeriesTime += totalTime;
-    console.log(`You spent ${totalTime} minutes watching ${element.title}`);
+     totalSeriesTime += totalTime;
+
   });
-  console.log(`You spent ${totalSeriesTime} watching your favorite shows.`);
+
+ 
+  return {totalTime,element["title"],totalSeriesTime};
 }
+  const totalTimeSpent = timeSpendOnSeries();
+  console.log(`You spent ${totalSeriesTime} watching your favorite shows.`);
+console.log(`You spent ${totalTime} minutes watching ${element.title}`);
 //const timeTotalInMin = seriesDurations[0].days * 24 * 60;
 //console.log(timeTotalInMin);
 /*Game of thrones took 0.01% of my life
