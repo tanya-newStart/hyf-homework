@@ -91,12 +91,12 @@ addActivity("Fitbit", 65);
 addActivity("WhatsApp", 40);
 addActivity("AccuWeather", 2);
 console.log(activities);
-const logUsage = showStatus("06/05/2024");
+const logUsage = showStatus("07/05/2024");
 console.log(logUsage);
 const logTimes = calculateCategoriesTimes();
 console.log(logTimes);
 const userMaxData = Object.entries(calculateMaxTime());
-console.log(userMaxData);
+//console.log(userMaxData);
 console.log(
-  `Most of you time, or ${userMaxData[1][1]} was spent on ${userMaxData[0][1]} `
+  `Most of you time, or ${userMaxData[1][1]} minutes, was spent on ${userMaxData[0][1]}. `
 );
