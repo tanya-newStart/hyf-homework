@@ -23,6 +23,12 @@ const seriesDurations = [
     hours: 3,
     minutes: 40,
   },
+  {
+    title: "Endeavour",
+    days: 4,
+    hours: 8,
+    minutes: 10,
+  },
 ];
 
 const avgLifeSpan = 80; //in years
