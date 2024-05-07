@@ -20,7 +20,7 @@ function addActivity(activity, duration) {
   };
   activities.push(userActivity);
   totalDuration += duration;
-  checkWarningThreshold(totalDuration); //it's probably not the best place for a warning but it'll be nice to notify user about threshold
+  checkWarningThreshold(totalDuration); //it's probably not the best place for a warning but it'll be nice to notify user about threshold somehow
   return activities;
 }
 function checkWarningThreshold(time) {
@@ -48,12 +48,17 @@ function calculateCategoriesTimes() {
 
 function calculateMaxTime() {
   let maxTime = 0;
+  let longestActivity = null;
   for (let activity of activities) {
     if (activity.duration > maxTime) {
       maxTime = activity.duration;
+      longestActivity = {
+        title: activity.activity,
+        duration: activity.duration,
+      };
     }
   }
-  return maxTime;
+  return longestActivity;
 }
 
 function showStatus(date) {
@@ -90,4 +95,8 @@ const logUsage = showStatus("06/05/2024");
 console.log(logUsage);
 const logTimes = calculateCategoriesTimes();
 console.log(logTimes);
-console.log(calculateMaxTime());
+const userMaxData = Object.entries(calculateMaxTime());
+console.log(userMaxData);
+console.log(
+  `Most of you time, or ${userMaxData[1][1]} was spent on ${userMaxData[0][1]} `
+);
