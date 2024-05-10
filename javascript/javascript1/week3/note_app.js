@@ -11,8 +11,13 @@ const compliments = [
   "Outstanding!",
   "Amazing!",
 ];
+
 function saveNote(content, id, done = false) {
   // The saveNote function pushes an object to the notes array with the keys content and id
+
+  if (typeof id === "string") {
+    return "Try again.Id must be a number";
+  }
   const note = { content, id, done };
   notes.push(note);
 }
@@ -46,7 +51,7 @@ function markAsDone(id) {
 //Test the app
 saveNote("Pick up groceries", 1);
 saveNote("Do laundry", 2);
-saveNote("Practice array methods", 3);
+console.log(saveNote("Practice array methods", "three"));
 console.log(notes); // [{content: 'Pick up groceries', id: 1}, {content: 'Do laundry', id: 2}]
 
 const firstNote = getNote(1);
