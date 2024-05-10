@@ -13,8 +13,8 @@ const compliments = [
 ];
 function saveNote(content, id, done = false) {
   // The saveNote function pushes an object to the notes array with the keys content and id
-  let note = { content, id, done };
-  return notes.push(note);
+  const note = { content, id, done };
+  notes.push(note);
 }
 
 function getNote(id) {
@@ -27,9 +27,11 @@ function getNote(id) {
 }
 
 function logOutNotesFormatted() {
+  let notesContent = "";
   for (let note of notes) {
-    return `The note with id:${note.id}, has the following note text: ${note.content}`;
+    notesContent += `The note with id:${note.id}, has the following note text: ${note.content}\n`;
   }
+  return notesContent;
 }
 function markAsDone(id) {
   for (let note of notes) {
