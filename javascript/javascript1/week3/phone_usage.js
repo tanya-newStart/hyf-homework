@@ -63,8 +63,8 @@ function calculateMaxTime() {
 
 function showStatus(date) {
   //date must be correct format though. Is it possible/necessary to be flexible here?
-  let totalTime = 0;
-  let amountOfActivities = 0;
+  let selectedDateTotalTime = 0;
+  let selectedDateTotalActivities = 0;
   for (let activity of activities) {
     if (activity.date === date) {
       totalTime += activity.duration;
