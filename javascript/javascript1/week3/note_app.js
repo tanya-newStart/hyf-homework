@@ -23,6 +23,7 @@ function getNote(id) {
       return note;
     }
   }
+  return `There is no item with id ${id}`;
 }
 
 function logOutNotesFormatted() {
