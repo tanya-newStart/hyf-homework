@@ -1,7 +1,7 @@
 //phone usage
 const activities = [];
-const USER_LIMIT = 150;
-const WARNING_THRESHOLD = USER_LIMIT * 0.8;
+const userLimit = 150;
+const warningThreshold = userLimit * 0.8;
 const categories = {
   Social: ["Instagram", "Tik Tok", "Messenger", "WhatsApp"],
   Intertainment: ["Netflix", "Games", "YouTube"],
@@ -24,7 +24,7 @@ function addActivity(activity, duration) {
   return activities;
 }
 function checkWarningThreshold(time) {
-  if (time >= WARNING_THRESHOLD) {
+  if (time >= warningThreshold) {
     console.warn("Warning: You are approaching your usage limit.");
   }
 }
@@ -63,21 +63,21 @@ function calculateMaxTime() {
 
 function showStatus(date) {
   //date must be correct format though. Is it possible/necessary to be flexible here?
-  let totalTime = 0;
-  let amountOfActivities = 0;
-  for (let activity of activities) {
+  let selectedDateTotalTime = 0;
+  let selectedDateAmountOfActivities = 0;
+  for (const activity of activities) {
     if (activity.date === date) {
-      totalTime += activity.duration;
-      amountOfActivities++;
+      selectedDateTotalTime += activity.duration;
+      selectedDateAmountOfActivities++;
     }
   }
-  if (amountOfActivities === 0) {
+  if (selectedDateAmountOfActivities === 0) {
     return `No activities found on ${date}`;
   }
-  let message = `You have added ${amountOfActivities} ${
-    amountOfActivities === 1 ? "activity" : "activities"
-  } on ${date}. They amount to ${totalTime} minutes.`;
-  if (totalTime > USER_LIMIT) {
+  let message = `You have added ${selectedDateAmountOfActivities} ${
+    selectedDateAmountOfActivities === 1 ? "activity" : "activities"
+  } on ${date}. They amount to ${selectedDateTotalTime} minutes.`;
+  if (selectedDateTotalTime > userLimit) {
     message += " You have reached your limit, no more smartphoning for you!";
   }
   return message;
@@ -91,12 +91,12 @@ addActivity("Fitbit", 65);
 addActivity("WhatsApp", 40);
 addActivity("AccuWeather", 2);
 console.log(activities);
-const logUsage = showStatus("07/05/2024");
+const logUsage = showStatus("10/05/2024");
 console.log(logUsage);
 const logTimes = calculateCategoriesTimes();
 console.log(logTimes);
 const userMaxData = Object.entries(calculateMaxTime());
-//console.log(userMaxData);
+
 console.log(
   `Most of you time, or ${userMaxData[1][1]} minutes, was spent on ${userMaxData[0][1]}. `
 );
