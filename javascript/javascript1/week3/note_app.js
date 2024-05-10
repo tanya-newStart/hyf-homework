@@ -16,14 +16,21 @@ function saveNote(content, id, done = false) {
   // The saveNote function pushes an object to the notes array with the keys content and id
 
   if (typeof id === "string") {
-    return "Try again.Id must be a number";
+    return "Try again. Id must be a number";
   }
+
   const note = { content, id, done };
+  const existingNote = notes.find(
+    (note) => note.content === content && note.id === id
+  );
+  if (existingNote) {
+    return "This is already in the notes.";
+  }
   notes.push(note);
 }
 
 function getNote(id) {
-  for (let note of notes) {
+  for (const note of notes) {
     if (note.id === id) {
       return note;
     }
@@ -51,6 +58,7 @@ function markAsDone(id) {
 //Test the app
 saveNote("Pick up groceries", 1);
 saveNote("Do laundry", 2);
+console.log(saveNote("Do laundry", 2));
 console.log(saveNote("Practice array methods", "three"));
 console.log(notes); // [{content: 'Pick up groceries', id: 1}, {content: 'Do laundry', id: 2}]
 
