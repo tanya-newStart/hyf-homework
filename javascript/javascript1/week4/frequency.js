@@ -1,0 +1,74 @@
+//
+//console.log(getCharacterFrequencies('happy'));
+const alphabet = [
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
+];
+function getCharacterFrequencies(str) {
+  const arr = str.split("");
+  const letterCount = [];
+  for (let i = 0; i < arr.length; i++) {
+    const character = arr[i];
+    let found = false;
+
+    for (let j = 0; j < letterCount.length; j++) {
+      if (letterCount[j].character === character) {
+        letterCount[j].count++;
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      letterCount.push({ character: character, count: 1 });
+    }
+  }
+  return letterCount;
+}
+
+console.log(getCharacterFrequencies("happy"));
+/*
+{
+  characters: [
+    {
+      character: 'a',
+      count: 1
+    },
+    {
+      character: 'h',
+      count: 1
+    },
+    {
+      character: 'p',
+      count: 2
+    },
+    {
+      character: 'y',
+      count: 1
+    }
+  ], length: 5
+}
+*/
