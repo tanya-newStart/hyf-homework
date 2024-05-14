@@ -8,13 +8,7 @@
 // Should be able to do simple math. fx what is 3 + 3 should respond with 6. Or what is 4 * 12 should respond with 48
 // Set a timer for 4 minutes - Should respond with "Timer set for 4 minutes". When 4 minutes is up: "Timer done". How do we set a timer in js? Google is your friend here!
 // Add one or more command to your voice assistant
-// Here is an example of usage:
 
-// console.log(getReply("Hello my name is Benjamin")); // "Nice to meet you benjamin"
-// console.log(getReply("What is my name?")); // "Your name is Benjamin"
-// console.log(getReply("Add fishing to my todo")); // "fishing added to your todo"
-let userName = null;
-let toDoList = [];
 // Tried to create an object instead of if else statements in getReply() function
 // but it was challenging to keep input somewhat dynamic.
 // const commands = {
@@ -28,9 +22,12 @@ let toDoList = [];
 //     return `${toDo} added to your to do list.`;
 //   },
 // };
+let userName = null;
+const toDoList = [];
 function getReply(input) {
-  const addPattern = /Add (.+) to my to do list\./;
-  const removePattern = /Remove (.+) from my to do list\./;
+  const addPattern = /Add (.+) to my to do list\./i;
+  const removePattern = /Remove (.+) from my to do list\./i;
+  const mathPattern = /what is (\d+)\s*([+\-*\/])\s*(\d+)\?/i;
   if (input === "Hello, my name is Tanya") {
     userName = getUserName(input);
     return `Nice to meet you, ${userName}`;
@@ -47,6 +44,8 @@ function getReply(input) {
     return `You have ${toDoList.length} items in your to do list: ${toDoList}`;
   } else if (input === "What day is it today?") {
     return currentDate();
+  } else if (mathPattern.test(input)) {
+    return calculateResult(input);
   }
   //   for (const key in commands) {
   //     if (input === key) {
@@ -56,14 +55,13 @@ function getReply(input) {
 }
 
 console.log(getReply("Hello, my name is Tanya"));
-console.log(userName);
 console.log(getReply("What is my name?"));
 console.log(getReply("How are you today?"));
 console.log(getReply("Add baking to my to do list."));
 console.log(getReply("Add singing in the shower to my to do list."));
 
 function getUserName(input) {
-  const regex = /Hello, my name is (.+)/;
+  const regex = /Hello, my name is (.+)/i;
   const match = input.match(regex);
   if (match && match[1]) {
     return match[1];
@@ -73,23 +71,23 @@ function getUserName(input) {
 }
 
 function addToDo(input) {
-  const regex = /Add (.+) to my to do list\./;
+  const regex = /Add (.+) to my to do list\./i;
   const match = input.match(regex);
   if (match && match[1]) {
     const toDo = match[1];
     toDoList.push(toDo);
-    return `${toDo} added to your list`;
+    return toDo;
   } else {
     return null;
   }
 }
 function removeToDo(input) {
-  const regex = /Remove (.+) from my to do list\./;
+  const regex = /Remove (.+) from my to do list\./i;
   const match = input.match(regex);
   if (match && match[1]) {
     const toDo = match[1];
     toDoList.splice(toDoList.indexOf(toDo), 1);
-    return `${toDo} removed from your list`;
+    return `${toDo} was removed from your list`;
   } else {
     return null;
   }
@@ -120,16 +118,40 @@ function currentDate() {
 }
 
 function calculator(a, b, operation) {
-  const operations = ["+", "-", "*", "/"];
-  const result = [a + b, a - b, a * b, a / b];
-  if (operations.includes(operation)) {
-    return result[operations.indexOf(operation)];
+  switch (operation) {
+    case "+":
+      return a + b;
+    case "-":
+      return a - b;
+    case "*":
+      return a * b;
+    case "/":
+      if (b !== 0) return a / b;
+      else {
+        return "Cannot divide by 0!";
+      }
+    default:
+      return "Sorry, not a valid operation";
   }
-  return "Enter a valid operation: +,-,*,/.";
+}
+
+function calculateResult(input) {
+  const regex = /what is (\d+)\s*([+\-*\/])\s*(\d+)\?/i;
+  const match = input.match(regex);
+  if (match && match.length === 4) {
+    const num1 = parseInt(match[1]);
+    const operation = match[2];
+    const num2 = parseInt(match[3]);
+    return calculator(num1, num2, operation);
+  } else {
+    return "Invalid input.";
+  }
 }
 //console.log(greetings("Hello, my name is Tanya"));
 console.log(addToDo("Add dishes to my to do list."));
 console.log(getReply("Remove fishing from my to do list."));
 console.log(toDoList);
 console.log(getReply("What is my to do?"));
-currentDate();
+console.log(getReply("What day is it today?"));
+console.log(getReply("what is 4 * 5?"));
+console.log(getReply("what is 3/4?"));
