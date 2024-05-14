@@ -1,68 +1,81 @@
-// *Hello my name is Benjamin - Should save the name benjamin. and respond with "nice to meet you Benjamin". What if someone writes this twice?
-// *What is my name - should respond with the name of the person. What if the name has not yet been mentioned?
-// *Add fishing to my todo - Should respond with "fishing added to your todo". Should add fishing to a list of todos
-// *Add singing in the shower to my todo - Should add singing in the shower to a list of todos
-// *Remove fishing from my todo - Should respond with "Removed fishing from your todo"
-// *What is on my todo? - should respond with the todos. Fx you have 2 todos - fishing and singing in the shower
-// *What day is it today? - Should respond with the date in a human readable format. E.g. if today is 30/8/2019 then it should respond with 30. of August 2019
-// Should be able to do simple math. fx what is 3 + 3 should respond with 6. Or what is 4 * 12 should respond with 48
-// Set a timer for 4 minutes - Should respond with "Timer set for 4 minutes". When 4 minutes is up: "Timer done". How do we set a timer in js? Google is your friend here!
-// Add one or more command to your voice assistant
+const state = {
+  // initial values
+  userName: null,
+  toDoList: [],
+};
+const patterns = {
+  namePattern: /Hello, my name is (.+)/i,
+  addPattern: /Add (.+) to my to do list\./i,
+  removePattern: /Remove (.+) from my to do list\./i,
+  showToDoPattern: /What is my to do\?/,
+  mathPattern: /what is (\d+)\s*([+\-*\/])\s*(\d+)\?/i,
+  tempPattern: /It is (\d+) degrees. What do I wear\?/,
+  getNamePattern: /What is my name\?/i,
+  datePattern: /What day is it today\?/i,
+  timerPattern: /Set a timer for (\d+) min/i,
+};
+const commands = {
+  [patterns.namePattern]: {
+    reply: (input) => {
+      const userName = getUserName(input);
+      if (userName) {
+        state.userName = userName;
+        return `Nice to meet you, ${state.userName}`;
+      } else {
+        return "Sorry, I could not determine your name.";
+      }
+    },
+  },
+  [patterns.addPattern]: {
+    reply: (input) => {
+      return addToDo(input);
+    },
+  },
+  [patterns.removePattern]: {
+    reply: (input) => {
+      return removeToDo(input);
+    },
+  },
+  [patterns.getNamePattern]: {
+    reply: () => {
+      if (state.userName) {
+        return `Your name is ${state.userName}.`;
+      } else return `Sorry, I cannot determine your name.`;
+    },
+  },
+  [patterns.datePattern]: {
+    reply: () => {
+      return currentDate();
+    },
+  },
+  [patterns.mathPattern]: {
+    reply: (input) => calculateResult(input),
+  },
 
-// Tried to create an object instead of if else statements in getReply() function
-// but it was challenging to keep input somewhat dynamic.
-// const commands = {
-//   "Hello, my name is [name]": (input) => {
-//     userName = getUserName(input);
-//     return `Nice to meet you, ${userName}`;
-//   },
-//   "What is my name?": () => `Your name is ${userName}`,
-//   "Add [todo] to my to do list.": (input) => {
-//     const toDo = addToDo(input);
-//     return `${toDo} added to your to do list.`;
-//   },
-// };
-let userName = null;
-const toDoList = [];
+  [patterns.tempPattern]: {
+    reply: (input) => smartWear(input),
+  },
+  [patterns.timerPattern]: {
+    reply: (input) => setTimer(input),
+  },
+  [patterns.showToDoPattern]: {
+    reply: () => state.toDoList,
+  },
+};
+
+//main function
 function getReply(input) {
-  const addPattern = /Add (.+) to my to do list\./i;
-  const removePattern = /Remove (.+) from my to do list\./i;
-  const mathPattern = /what is (\d+)\s*([+\-*\/])\s*(\d+)\?/i;
-  if (input === "Hello, my name is Tanya") {
-    userName = getUserName(input);
-    return `Nice to meet you, ${userName}`;
-  } else if (input === "What is my name?") {
-    return `Your name is ${userName}`;
-  } else if (input === "How are you today?") {
-    return "Good!";
-  } else if (addPattern.test(input)) {
-    const toDo = addToDo(input);
-    return `${toDo} added to your to do list.`;
-  } else if (removePattern.test(input)) {
-    return removeToDo(input);
-  } else if (input === "What is my to do?") {
-    return `You have ${toDoList.length} items in your to do list: ${toDoList}`;
-  } else if (input === "What day is it today?") {
-    return currentDate();
-  } else if (mathPattern.test(input)) {
-    return calculateResult(input);
+  for (const pattern in patterns) {
+    if (patterns[pattern].test(input)) {
+      const replyFunction = commands[patterns[pattern]].reply;
+      return replyFunction(input);
+    }
   }
-  //   for (const key in commands) {
-  //     if (input === key) {
-  //       return commands[key](input);
-  //     }
-  //   }
+  return "Sorry, I don't understand that command.";
 }
 
-console.log(getReply("Hello, my name is Tanya"));
-console.log(getReply("What is my name?"));
-console.log(getReply("How are you today?"));
-console.log(getReply("Add baking to my to do list."));
-console.log(getReply("Add singing in the shower to my to do list."));
-
 function getUserName(input) {
-  const regex = /Hello, my name is (.+)/i;
-  const match = input.match(regex);
+  const match = input.match(patterns.namePattern);
   if (match && match[1]) {
     return match[1];
   } else {
@@ -71,25 +84,32 @@ function getUserName(input) {
 }
 
 function addToDo(input) {
-  const regex = /Add (.+) to my to do list\./i;
-  const match = input.match(regex);
+  const match = input.match(patterns.addPattern);
   if (match && match[1]) {
     const toDo = match[1];
-    toDoList.push(toDo);
-    return toDo;
+    if (!state.toDoList.includes(toDo)) {
+      state.toDoList.push(toDo);
+      return `${toDo} added to your list`;
+    } else {
+      return `${toDo} is alredy in your list.`;
+    }
   } else {
-    return null;
+    return "Sorry, I'm unable to perform that command. Check your input, please.";
   }
 }
 function removeToDo(input) {
-  const regex = /Remove (.+) from my to do list\./i;
-  const match = input.match(regex);
+  const match = input.match(patterns.removePattern);
   if (match && match[1]) {
     const toDo = match[1];
-    toDoList.splice(toDoList.indexOf(toDo), 1);
-    return `${toDo} was removed from your list`;
+    const index = state.toDoList.indexOf(toDo);
+    if (index !== -1) {
+      state.toDoList.splice(index, 1);
+      return `${toDo} was removed from your list.`;
+    } else {
+      return `${toDo} is not in your list.`;
+    }
   } else {
-    return null;
+    return "Invalid input for removing a to-do item.";
   }
 }
 
@@ -136,10 +156,9 @@ function calculator(a, b, operation) {
 }
 
 function calculateResult(input) {
-  const regex = /what is (\d+)\s*([+\-*\/])\s*(\d+)\?/i;
-  const match = input.match(regex);
+  const match = input.match(patterns.mathPattern);
   if (match && match.length === 4) {
-    const num1 = parseInt(match[1]);
+    const num1 = parseInt(match[1]); //extracts numbers and operation from a string
     const operation = match[2];
     const num2 = parseInt(match[3]);
     return calculator(num1, num2, operation);
@@ -147,11 +166,48 @@ function calculateResult(input) {
     return "Invalid input.";
   }
 }
-//console.log(greetings("Hello, my name is Tanya"));
-console.log(addToDo("Add dishes to my to do list."));
+
+function setTimer(input) {
+  const match = input.match(patterns.timerPattern);
+  if (match && match.length === 2) {
+    const minutes = parseInt(match[1]);
+    setTimeout(function () {
+      console.log("Time is up!");
+    }, minutes * 60 * 1000);
+    return `Timer is set for ${minutes} min.`;
+  } else {
+    return "Invalid input for setting a timer.";
+  }
+}
+function smartWear(input) {
+  const match = input.match(patterns.tempPattern);
+  if (match && match.length === 2) {
+    const temp = match[1];
+    const clothes = [
+      ["shorts and a t-shirt", [18, 48]],
+      ["jeans and a sweater", [12, 18]],
+      ["light coat", [5, 12]],
+      ["winter coat and a winter hat", [-5, 5]],
+    ];
+    for (let i = 0; i < clothes.length; i++) {
+      const tempRange = clothes[i][1];
+      if (temp >= tempRange[0] && temp < tempRange[1]) {
+        return clothes[i][0];
+      }
+    }
+    return `Stay home! It's freezing!`;
+  }
+}
+//Test the code
+console.log(getReply("Hello, my name is Tanya"));
+console.log(getReply("What is my name?"));
+console.log(getReply("How are you today?"));
+console.log(getReply("Add baking to my to do list."));
+console.log(getReply("Add singing in the shower to my to do list."));
 console.log(getReply("Remove fishing from my to do list."));
-console.log(toDoList);
 console.log(getReply("What is my to do?"));
 console.log(getReply("What day is it today?"));
 console.log(getReply("what is 4 * 5?"));
 console.log(getReply("what is 3/4?"));
+console.log(getReply("It is 20 degrees. What do I wear?"));
+console.log(getReply("Set a timer for 1 min"));
