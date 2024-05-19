@@ -8,7 +8,8 @@ const patterns = {
   addPattern: /Add (.+) to my to do list\./i,
   removePattern: /Remove (.+) from my to do list\./i,
   showToDoPattern: /What is my to do\?/,
-  mathPattern: /what is (\d+)\s*([+\-*\/])\s*(\d+)\?/i,
+  mathPattern:
+    /what(?:'s| is) (\d+) (plus|\+|minus|-|times|\*|multiplied by|x|divided by|\/) (\d+)\?/i,
   tempPattern: /It is (\d+) degrees. What do I wear\?/,
   getNamePattern: /What is my name\?/i,
   datePattern: /What day is it today\?/i,
@@ -27,14 +28,10 @@ const commands = {
     },
   },
   [patterns.addPattern]: {
-    reply: (input) => {
-      return addToDo(input);
-    },
+    reply: (input) => addToDo(input),
   },
   [patterns.removePattern]: {
-    reply: (input) => {
-      return removeToDo(input);
-    },
+    reply: (input) => removeToDo(input),
   },
   [patterns.getNamePattern]: {
     reply: () => {
@@ -44,9 +41,7 @@ const commands = {
     },
   },
   [patterns.datePattern]: {
-    reply: () => {
-      return currentDate();
-    },
+    reply: () => currentDate(),
   },
   [patterns.mathPattern]: {
     reply: (input) => calculateResult(input),
@@ -76,7 +71,7 @@ function getReply(input) {
 
 function getUserName(input) {
   const match = input.match(patterns.namePattern);
-  if (match && match[1]) {
+  if (match[1]) {
     return match[1];
   } else {
     return null;
@@ -85,7 +80,7 @@ function getUserName(input) {
 
 function addToDo(input) {
   const match = input.match(patterns.addPattern);
-  if (match && match[1]) {
+  if (match[1]) {
     const toDo = match[1];
     if (!state.toDoList.includes(toDo)) {
       state.toDoList.push(toDo);
@@ -99,7 +94,7 @@ function addToDo(input) {
 }
 function removeToDo(input) {
   const match = input.match(patterns.removePattern);
-  if (match && match[1]) {
+  if (match[1]) {
     const toDo = match[1];
     const index = state.toDoList.indexOf(toDo);
     if (index !== -1) {
@@ -140,12 +135,18 @@ function currentDate() {
 function calculator(a, b, operation) {
   switch (operation) {
     case "+":
+    case "plus":
       return a + b;
     case "-":
+    case "minus":
       return a - b;
     case "*":
+    case "multiplied by":
+    case "times":
+    case "x":
       return a * b;
     case "/":
+    case "divided by":
       if (b !== 0) return a / b;
       else {
         return "Cannot divide by 0!";
@@ -157,6 +158,7 @@ function calculator(a, b, operation) {
 
 function calculateResult(input) {
   const match = input.match(patterns.mathPattern);
+  console.log("Match:", match); // Debugging line to see what is matched
   if (match && match.length === 4) {
     const num1 = parseInt(match[1]); //extracts numbers and operation from a string
     const operation = match[2];
@@ -189,10 +191,10 @@ function smartWear(input) {
       ["light coat", [5, 12]],
       ["winter coat and a winter hat", [-5, 5]],
     ];
-    for (let i = 0; i < clothes.length; i++) {
-      const tempRange = clothes[i][1];
+    for (const element of clothes) {
+      const tempRange = element[1];
       if (temp >= tempRange[0] && temp < tempRange[1]) {
-        return clothes[i][0];
+        return element[0];
       }
     }
     return `Stay home! It's freezing!`;
