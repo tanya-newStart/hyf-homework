@@ -1,43 +1,45 @@
 document.addEventListener("DOMContentLoaded", domLoaded);
-
+const dogContainer = document.getElementById("dog-breed");
 const imageContainer = document.getElementById("image-container");
 const userInputContainer = document.getElementById("user-input");
 let dogBreeds = {};
 let randomDogBreed = "";
 
-function domLoaded() {
-  fetchRandomDogImage();
-  fetchDogBreeds();
+async function domLoaded() {
+  await fetchRandomDogImage();
+  await fetchDogBreeds();
+  setupAutocomplete(randomDogBreed);
 }
 
-function fetchRandomDogImage() {
-  fetch("https://dog.ceo/api/breeds/image/random")
-    .then((response) => response.json())
-    .then((data) => {
-      updateDom(data);
-      randomDogBreed = data.message.split("/")[4];
-      randomDogBreed = randomDogBreed.replace("-", " ");
-      if (randomDogBreed.includes(" ")) {
-        const [breedName, subBreed] = randomDogBreed.split(" ");
-        randomDogBreed = `${
-          subBreed.charAt(0).toUpperCase() + subBreed.slice(1)
-        } ${breedName}`;
-      } else {
-        randomDogBreed =
-          randomDogBreed.charAt(0).toUpperCase() + randomDogBreed.slice(1);
-      }
-      setupAutocomplete(randomDogBreed);
-    })
-    .catch((error) => console.log("Something went wrong", error));
+async function fetchRandomDogImage() {
+  try {
+    const response = await fetch("https://dog.ceo/api/breeds/image/random");
+    const data = await response.json();
+    updateDom(data);
+    randomDogBreed = data.message.split("/")[4];
+    randomDogBreed = randomDogBreed.replace("-", " ");
+    if (randomDogBreed.includes(" ")) {
+      const [breedName, subBreed] = randomDogBreed.split(" ");
+      randomDogBreed = `${
+        subBreed.charAt(0).toUpperCase() + subBreed.slice(1)
+      } ${breedName}`;
+    } else {
+      randomDogBreed =
+        randomDogBreed.charAt(0).toUpperCase() + randomDogBreed.slice(1);
+    }
+  } catch (error) {
+    console.log("Something went wrong", error);
+  }
 }
 
-function fetchDogBreeds() {
-  fetch("https://dog.ceo/api/breeds/list/all")
-    .then((response) => response.json())
-    .then((data) => {
-      dogBreeds = data.message;
-    })
-    .catch((error) => console.log("Something went wrong", error));
+async function fetchDogBreeds() {
+  try {
+    const response = await fetch("https://dog.ceo/api/breeds/list/all");
+    const data = await response.json();
+    dogBreeds = data.message;
+  } catch (error) {
+    onsole.log("Something went wrong", error);
+  }
 }
 
 function updateDom(photo) {
@@ -53,10 +55,15 @@ function updateDom(photo) {
 function setupAutocomplete(randomDogBreed) {
   const input = document.createElement("input");
   input.type = "text";
-  input.placeholder = randomDogBreed;
+  input.placeholder = "Enter a dog breed";
   input.setAttribute("list", "breeds");
+  const textBreed = document.createElement("h2");
+  textBreed.textContent = randomDogBreed;
+
+  dogContainer.appendChild(textBreed);
 
   const datalist = document.getElementById("breeds");
+  datalist.innerHTML = "";
 
   Object.keys(dogBreeds).forEach((breed) => {
     if (dogBreeds[breed].length > 0) {
@@ -78,24 +85,36 @@ function setupAutocomplete(randomDogBreed) {
   userInputContainer.appendChild(submitBtn);
   submitBtn.textContent = "Submit";
 
-  submitBtn.addEventListener("click", () => {
+  submitBtn.addEventListener("click", async () => {
     const breed = input.value.toLowerCase().trim();
     let breedName, subBreed;
     const breedParts = breed.split(" ");
     breedName = breedParts[0];
     subBreed = breedParts[1];
-    if (breedName && subBreed) {
-      fetch(`https://dog.ceo/api/breed/${subBreed}/${breedName}/images/random`)
-        .then((response) => response.json())
-        .then((data) => updateDom(data))
-        .catch((error) => console.log(error));
-    } else if (dogBreeds[breed]) {
-      fetch(`https://dog.ceo/api/breed/${breed}/images/random`)
-        .then((response) => response.json())
-        .then((data) => updateDom(data))
-        .catch((error) => console.log(error));
-    } else {
-      alert("Breed not found");
+    try {
+      let data;
+      if (breedName && subBreed) {
+        const response = await fetch(
+          `https://dog.ceo/api/breed/${subBreed}/${breedName}/images/random`
+        );
+        data = await response.json();
+        updateDom(data);
+        textBreed.textContent = `${
+          breedName.charAt(0).toUpperCase() + breedName.slice(1)
+        } ${subBreed.charAt(0).toUpperCase() + subBreed.slice(1)}`;
+      } else if (dogBreeds[breed]) {
+        const response = await fetch(
+          `https://dog.ceo/api/breed/${breed}/images/random`
+        );
+        data = await response.json();
+        updateDom(data);
+        textBreed.textContent = breed;
+      } else {
+        alert("Breed not found");
+      }
+    } catch (error) {
+      console.log("Something went wrong", error);
     }
+    input.value = "";
   });
 }
