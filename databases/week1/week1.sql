@@ -20,7 +20,7 @@ where s.name ="Done";
 select t.*
 from task t
 join status s on t.status_id = s.id
-where s.name = "Not started" or s.name = "In progress";
+where not s.name = "Done";
 
 -- all the tasks, sorted with the most recently created first
 select * 
