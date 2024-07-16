@@ -97,12 +97,13 @@ select * from `Review`;
 
 -- add a new review 
 INSERT INTO `Review`(title,description,meal_id,stars,created_date) VALUES
-('Fantastic Sushi Experience', 'Highly recommend trying their specialty rolls!', 2, 5, '2024-07-15');
+('Nice Sushi', 'Their specialty rolls are yummy!', 2, 4, '2024-07-16');
 
 --update review
 UPDATE `Review`
-set title ="Good sushi",
-stars = 4
+set title ="Ok sushi",
+description ="Their specialty roll are average",
+stars = 3
 where id = 4;
 
 --delete a review with any id
@@ -115,6 +116,9 @@ INSERT INTO Reservation (number_of_guests, meal_id, created_date, contact_phonen
 VALUES (4, 5, '2024-07-20', '55-56-78-09', 'Anna Andersen', 'anna.andersen@yahoo.com');
 INSERT INTO Reservation (number_of_guests, meal_id, created_date, contact_phonenumber, contact_name, contact_email) VALUES
 (2,5, '2024-07-21', '55-56-78-19', 'Anna Morten', 'anna.morten@yahoo.com')
+
+INSERT INTO Reservation (number_of_guests, meal_id, created_date, contact_phonenumber, contact_name, contact_email) VALUES
+(3,5, '2024-07-21', '50-56-78-19', 'Claus Morten', 'claus.morten@yahoo.com')
 
 INSERT INTO Review (title, description, meal_id, stars, created_date)
 VALUES ('Delicious', 'The Rød grød med fløde was an absolute treat!', 5, 5, '2024-07-26');
@@ -144,3 +148,18 @@ ORDER BY id DESC
 LIMIT 2;
 
 --Get the meals that have good reviews
+select m.*, r.stars from `Meal` m
+join `Review` r on m.id = r.meal_id
+where r.stars > 3;
+
+--Get reservations for a specific meal sorted by created_date
+SELECT r.*,m.title from `Reservation` r
+JOIN `Meal` m on r.meal_id = m.id
+where m.id = 5
+ORDER BY r.created_date ASC;
+
+--Sort all meals by average number of stars in the reviews
+select m.title,AVG(r.stars) as average_stars from `Meal` m
+join `Review` r on m.id = r.meal_id
+GROUP BY m.title
+ORDER BY average_stars ASC;
