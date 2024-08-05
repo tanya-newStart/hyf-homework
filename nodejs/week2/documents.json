@@ -1,0 +1,41 @@
+[
+  {
+    "id": 1,
+    "name": "Used Apple Airpods",
+    "price": "50",
+    "description": "Battery life is not great"
+  },
+  {
+    "id": 2,
+    "type": "doc",
+    "value": "hello world"
+  },
+  {
+    "id": 3,
+    "name": "Pre-owned Oculus Quest 2",
+    "price": "250",
+    "description": "Has controllers, minor lens scratches"
+  },
+  {
+    "id": 4,
+    "type": "doc",
+    "value": "Checking out VR"
+  },
+  {
+    "id": 5,
+    "name": "Refurbished MacBook Air M1",
+    "price": "800",
+    "description": "Awesome condition, includes charger"
+  },
+  {
+    "id": 6,
+    "type": "doc",
+    "value": "Work made easy"
+  },
+  {
+    "id": 7,
+    "name": "Pre-owned Samsung Galaxy Z Fold 3",
+    "price": "1300",
+    "description": "Tiny crease on fold, still awesome"
+  }
+]
