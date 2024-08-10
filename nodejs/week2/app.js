@@ -10,24 +10,19 @@ app.get("/", (req, res) => {
   res.send("This is a search engine");
 });
 
-app.get("/search", async (req, res) => {
+app.get("/search", (req, res) => {
   const query = req.query.q;
 
-  try {
-    if (!query) {
-      res.status(200).json(items);
-    } else {
-      const match = items.filter((item) =>
-        Object.values(item).some(
-          (value) =>
-            typeof value === "string" && value.toLowerCase().includes(query)
-        )
-      );
-      res.status(200).json(match);
-    }
-  } catch (err) {
-    console.log("Error reading file", err);
-    res.status(500).send("Internal Server Error");
+  if (!query) {
+    res.status(200).json(items);
+  } else {
+    const match = items.filter((item) =>
+      Object.values(item).some(
+        (value) =>
+          typeof value === "string" && value.toLowerCase().includes(query)
+      )
+    );
+    res.status(200).json(match);
   }
 });
 
@@ -39,6 +34,36 @@ app.get("/documents/:id", (req, res) => {
   } else {
     res.status(200).json(item);
   }
+});
+
+app.post("/search", (req, res) => {
+  const query = req.params.q;
+  const { fields } = req.body;
+
+  if (query && fields) {
+    return res
+      .status(400)
+      .send("Cannot provide both query and fields for filtering");
+  }
+
+  let result = items;
+
+  if (query) {
+    result = result.filter((item) =>
+      Object.values(item).some(
+        (value) =>
+          typeof value === "string" && value.toLowerCase().includes(query)
+      )
+    );
+  }
+  if (fields) {
+    result = result.filter((item) =>
+      Object.entries(fields).every(
+        ([key, value]) => item[key] && item[key] === value
+      )
+    );
+  }
+  res.status(200).json(result);
 });
 
 app.listen(port, () => {
