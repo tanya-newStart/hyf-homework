@@ -1,10 +1,8 @@
 import express from "express";
-import fs from "fs/promises";
+import items from "./documents.json" assert { type: "json" };
 
 const app = express();
 const port = process.env.PORT || 3000;
-
-const filePath = "./documents.json";
 
 app.use(express.json());
 
@@ -16,9 +14,6 @@ app.get("/search", async (req, res) => {
   const query = req.query.q;
 
   try {
-    const data = await fs.readFile(filePath, "utf8");
-    const items = JSON.parse(data);
-
     if (!query) {
       res.status(200).json(items);
     } else {
@@ -35,6 +30,17 @@ app.get("/search", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
+app.get("/documents/:id", (req, res) => {
+  const itemId = Number(req.params.id);
+  const item = items.find((item) => item.id === itemId);
+  if (!item) {
+    res.status(404).send("Not Found");
+  } else {
+    res.status(200).json(item);
+  }
+});
+
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
 });
