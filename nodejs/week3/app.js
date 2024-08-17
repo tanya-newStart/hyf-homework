@@ -27,9 +27,19 @@ contactsAPIRouter.get("/", async (req, res) => {
   let query = knexInstance.select("*").from("contacts");
 
   if ("sort" in req.query) {
-    const orderBy = req.query.sort.toString();
-    if (orderBy.length > 0) {
-      query = query.orderByRaw(orderBy);
+    const [field, direction] = req.query.sort
+      .split(" ")
+      .map((part) => part.trim());
+
+    const allowedSortFields = ["first_name", "last_name"];
+    const allowedSortDirections = ["ASC", "DESC"];
+    if (
+      allowedSortFields.includes(field) &&
+      allowedSortDirections.includes(direction.toUpperCase())
+    ) {
+      query = query.orderBy(field, direction.toUpperCase());
+    } else {
+      return res.status(400).json({ error: "Invalid sort inquiry" });
     }
   }
 
