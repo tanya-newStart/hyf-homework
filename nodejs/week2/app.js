@@ -1,4 +1,4 @@
-import express from "express";
+import express from "express"
 import items from "./documents.json" assert { type: "json" };
 
 const app = express();
@@ -67,5 +67,18 @@ app.post("/search", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
+  console.log(`Listening on port ${port}`)
+const app = express();
+const port = 3000;
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+app.get("/hello/:name", (req, res) => {
+  res.send("Hello " + req.params.name);
+});
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
 });
