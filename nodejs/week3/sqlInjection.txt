@@ -1,0 +1,8 @@
+With orderByRaw it is possible to execute multiple sql statements. The statement 
+below orders contact by first_name, then delete all data from table contacts
+
+SQL select * from `contacts` order by first_name;drop table contacts;-- ASC
+
+Another example of corrupting data:
+
+SQL select * from `contacts` order by first_name;UPDATE contacts SET email="ha@ha.com";-- ASC
